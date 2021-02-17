@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.ucalgary.seng300.dao.mapper.ClientMapper">
+
+    <resultMap id="ClientMap" type="Client">
+        <result property="phoneNumber" column="phone_number" />
+        <result property="emailAddress" column="email_address" />
+    </resultMap>
+
+    <select id="getClientList"
+            resultMap="ClientMap">
+        select * from client;
+    </select>
+
+    <select id="getClientListLimit" resultMap="ClientMap"
+            parameterType="map">
+        select * from client limit #{startIndex}, #{pageSize};
+    </select>
+
+    <select id="getClientById"
+            resultMap="ClientMap">
+        select * from client where id=#{id};
+    </select>
+
+    <select id="getClientByName"
+            resultMap="ClientMap">
+        select * from client where name=#{name};
+    </select>
+
+    <select id="getClientByPhoneNumber"
+            resultMap="ClientMap">
+        select * from client where
+        phone_number=#{phoneNumber};
+    </select>
+
+    <select id="getClientByAddress"
+            resultMap="ClientMap">
+        select * from client where
+        address=#{address};
+    </select>
+
+    <select id="getClientByEmailAddress"
+            resultMap="ClientMap">
+        select * from client where
+        email_address=#{emailAddress};
+    </select>
+
+</mapper>

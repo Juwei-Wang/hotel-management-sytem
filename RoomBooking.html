@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body style="background-color:#eee;padding: 20px;text-align:center">
+    <el-row>
+        <el-col :span="24">
+            <!--<div class="grid-content bg-purple-dark">-->
+                <div id="H3">
+                    <h3 align="center" style="height: 60px; letter-spacing: 0px; word-spacing: 2px; width: 100%; font-size: 35px; font-weight: 400; text-align: center; text-indent: 0px; color: rgb(30, 144, 255); max-width: 150%; line-height: 0px; top: 0px; bottom: 0px; padding-top: 0px; padding-bottom:0px; border-top-width: 0px;">
+                        Room Booking
+                    </h3>
+                </div>
+            <!--</div>-->
+        </el-col>
+    </el-row>
+
+    <el-row>
+        <el-col :span="24">
+            <div>
+                <div id="dp">
+                    <!--<template>-->
+
+                    <!--<el-date-picker v-model="cid" class="mc-ui-flex-center" style="width: 25%; text-align: center; position: relative; font-size: 17px;" v-model="datePicker" :editable="false" :clearable="true" type="date" format="yyyy-MM-dd" placeholder="Select your Check-In Date" clear-icon="el-icon-delete" v-if="true" align="center">
+                    </el-date-picker>
+                    <el-button mc-type="column-el-button" size="mini" type="primary" @click="retQuery">Search</el-button>
+                    <el-divider>
+                    </el-divider>-->
+                    <template>
+                        <div class="block">
+                            <el-date-picker
+                                    v-model="cid"
+                                    type="date"
+                                    placeholder="Select Your Check-In Date"
+                                    style="width: 25%; text-align: center; position: relative; font-size: 17px;" :editable="false" :clearable="true" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="Select your Check-In Date" clear-icon="el-icon-delete">
+                            </el-date-picker>
+                        </div>
+                    </template>
+
+                    <template>
+                        <div class="block">
+                            <el-date-picker
+                                    v-model="cod"
+                                    type="date"
+                                    placeholder="Select Your Check-Out Date"
+                                    style="width: 25%; text-align: center; position: relative; font-size: 17px;" :editable="false" :clearable="true" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="Select your Check-In Date" clear-icon="el-icon-delete">
+                            </el-date-picker>
+                        </div>
+                    </template>
+                    <!--@click="retQuery"-->
+
+                    <!--<el-table :data="tableList" :fit="true" :show-header="true">
+                        <el-table-column prop="id" label="Type">
+                        </el-table-column>
+                        <el-table-column prop="name" label="Empty Rooms Remaining">
+                        </el-table-column>
+                        <el-table-column prop="name" label="Left Price">
+                        </el-table-column>
+                        <el-table-column label="Book It Now" fixed="right" width="200px">
+                            <template slot-scope="scope">
+                                <el-button mc-type="column-el-button" size="mini" type="primary">Book</el-button>
+                                <el-button mc-type="column-el-button" size="mini" type="danger">Delete</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>-->
+
+
+                </div>
+                <div id="f1"><el-button mc-type="column-el-button" size="mini" type="primary" @click="retQuery">Search</el-button></div>
+                <div id="tb">
+                    <template>
+                        <div>
+                            <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
+                        </div>
+                    </template>
+                    <template>
+                        <el-table :data="tableData">
+                            <el-table-column
+                                    v-for="{ prop, label } in colConfigs"
+                                    :key="prop"
+                                    :prop="prop"
+                                    :label="label">
+                            </el-table-column>
+                            <el-table-column label="Operation" width="160">
+                                <template slot-scope="scope">
+                                    <el-button size="mini" type="primary" plain @click = "callChange(scope.row.roomType)">Book!</el-button><!--submit(scope.row.roomType)-->
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </div>
+
+            </div>
+        </el-col>
+    </el-row>
+
+    <el-row>
+        <el-col :span="24">
+            <div id="dl">
+                <!-- Table -->
+                <!--<el-button type="text" @click="dialogTableVisible = true">打开嵌套表格的 Dialog</el-button>
+
+                <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+                    <el-table :data="gridData">
+                        <el-table-column property="date" label="日期" width="150"></el-table-column>
+                        <el-table-column property="name" label="姓名" width="200"></el-table-column>
+                        <el-table-column property="address" label="地址"></el-table-column>
+                    </el-table>
+                </el-dialog>-->
+
+                <!-- Form -->
+                <!--<el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>-->
+
+                <el-dialog title="Confirm Your Booking" :visible.sync="dialogFormVisible">
+                    <el-form :model="form">
+                        <el-form-item label="Client Name : " :label-width="formLabelWidth">
+                            <el-input v-model="form.cName" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Phone Number : " :label-width="formLabelWidth">
+                            <el-input v-model="form.pNumber" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Email Address : " :label-width="formLabelWidth">
+                            <el-input v-model="form.email" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Room Type : " :label-width="formLabelWidth">
+                            <el-input v-model="form.tp" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Check In Date : " :label-width="formLabelWidth">
+                            <el-input v-model="form.cid" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Check Out Date : " :label-width="formLabelWidth">
+                            <el-input v-model="form.cod" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <!--<el-form-item label="活动区域" :label-width="formLabelWidth">
+                            <el-select v-model="form.region" placeholder="请选择活动区域">
+                                <el-option label="区域一" value="shanghai"></el-option>
+                                <el-option label="区域二" value="beijing"></el-option>
+                            </el-select>
+                        </el-form-item>-->
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">OH! I'm not ready</el-button>
+                        <el-button type="primary" :plain="true" @click="dialogFormVisible = false,Submit()">Book It Now!</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+        </el-col>
+    </el-row>
+
+
+</body>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script>
+    ELEMENT.locale(ELEMENT.lang.en)
+</script>
+<script type="text/javascript" src="js/RoomShowingdp.js"></script>
+<script type="text/javascript" src="js/RoomShowingtb.js"></script>
+<script type="text/javascript" src="js/RoomShowingform.js"></script>
+<script type="text/javascript" src="js/RoomBookingDialog.js"></script>
+
+
+
+</html>

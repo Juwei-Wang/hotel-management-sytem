@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.ucalgary.seng300.dao.mapper.RoomMapper">
+
+    <resultMap id="RoomMap" type="Room">
+        <result property="isEmpty" column="is_empty"/>
+    </resultMap>
+
+    <select id="getRoomList"
+            resultMap="RoomMap">
+        select * from  group2_hotel.room;
+    </select>
+
+    <select id="getEmptyRoomList"
+            resultMap="RoomMap">
+        select * from group2_hotel.room where is_empty = 1;
+    </select>
+
+    <select id="getEmptyRoomListRankByPrice" resultMap="RoomMap">
+        select * from group2_hotel.room where is_empty = 1 order by price desc;
+    </select>
+
+    <select id="getEmptyRoomListByRoomType" resultMap="RoomMap">
+        select *
+        from group2_hotel.room where is_empty = 1 and type = 'Deluxe';
+    </select>
+
+    <!--
+    <select id="selectARoomNumber" resultMap="RoomMap">
+        select * from (
+        /*选取当前空了的房间*/
+        (select number from group2_hotel.room where group2_hotel.room.type=
+        #{roomType} and room.is_empty = 1)
+        union
+        /*选取已经被订阅但checkout date早于当前用户checkin date的房间*/
+        (select group2_hotel.booking.room_number from group2_hotel.booking where
+        <![CDATA[ group2_hotel.booking.checkout_date <= #{checkinDate}) ]]>
+        union
+        /*选取已经入住但checkout date早于当前用户checkin date的房间*/
+        (select room_number from checkin where
+        <![CDATA[ checkout_date <= #{checkinDate}) ]]>
+        ) as rnbrn limit 1;/*如果有多间房 只选取一间*/
+        -->
+    <select id="selectARoomNumber" resultMap="RoomMap">
+        select *
+        from (
+        (select number
+        from group2_hotel.room
+        where is_empty = 1 and group2_hotel.room.type= #{roomType} and number not in (select booking.room_number from booking))
+        union
+        (select number
+        from group2_hotel.room
+        where is_empty = 1 and group2_hotel.room.type= #{roomType}
+        and number in (select booking.room_number from booking where
+        <![CDATA[ booking.checkout_date <= #{checkinDate})) ]]>
+        union
+        (select number
+        from group2_hotel.room
+        where is_empty = 0 and group2_hotel.room.type= #{roomType}
+        and number in (select checkin.room_number from checkin where
+        <![CDATA[ checkin.checkout_date <= #{checkinDate})) ]]>
+        ) as rnrn order by number limit 1;
+    </select>
+
+    <select id="selectAllAvailableRooms" resultMap="RoomMap"
+            parameterType="string">
+        select * from (
+        (select number from group2_hotel.room where is_empty = 1 and number not in
+        (select booking.room_number from booking))
+        union
+        (select number from group2_hotel.room where is_empty = 1 and number in
+        (select booking.room_number from booking where
+        <![CDATA[ booking.checkout_date <= #{checkinDate} ]]>
+        ))
+        union
+        (select number from group2_hotel.room where is_empty = 0 and number in
+        (select checkin.room_number from checkin where
+        <![CDATA[ checkin.checkout_date <= #{checkinDate} ]]>
+        ))) as rnrn order by number;
+    </select>
+
+</mapper>

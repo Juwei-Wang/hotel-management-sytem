@@ -1,0 +1,41 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <import resource="spring-dao.xml"/>
+    <import resource="springmvc-servlet.xml"/>
+
+    <context:annotation-config/>
+
+    <!--和以前不同：-->
+    <!--1.修改了Utils的实现方式，使spring托管utils对象-->
+    <!--2.需要添加各个Mapper接口的实现类-->
+    <!--<bean id="mybatisUtils" class="ca.ucalgary.seng300.dao.impl.AdminMapperImpl">
+        <property name="" ref="sqlSession"/>
+    </bean>-->
+
+    <bean id="adminMapper" class="ca.ucalgary.seng300.dao.impl.AdminMapperImpl"/>
+        <!--<property name="sqlSession" ref="SqlSession"/>-->
+
+    <bean id="clientMapper" class="ca.ucalgary.seng300.dao.impl.ClientMapperImpl"/>
+        <!--<property name="sqlSession" ref="SqlSession"/>-->
+
+    <bean id="roomMapper" class="ca.ucalgary.seng300.dao.impl.RoomMapperImpl"/>
+        <!--<property name="sqlSession" ref="SqlSession"/>-->
+    <bean id="bookingMapper" class="ca.ucalgary.seng300.dao.impl.BookingMapperImpl"/>
+
+    <!--<bean id="Mapper" class="ca.ucalgary.seng300.dao.impl.AdminMapperImpl">
+        <property name="sqlSession" ref="sqlSession"/>
+    </bean>
+
+    <bean id="adminMapper" class="ca.ucalgary.seng300.dao.impl.AdminMapperImpl">
+        <property name="sqlSession" ref="sqlSession"/>
+    </bean>-->
+
+    <!--Service层实现-->
+    <bean id="searchRoomsImpl" class="ca.ucalgary.seng300.service.impl.SearchServiceImpl"/>
+    <bean id="bookingImpl" class="ca.ucalgary.seng300.service.impl.BookingServiceImpl"/>
+</beans>
